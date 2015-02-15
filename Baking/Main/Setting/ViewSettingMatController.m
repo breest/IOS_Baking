@@ -7,6 +7,7 @@
 //
 
 #import "MyArray.h"
+#import "MyMutableArray.h"
 #import "MyData.h"
 #import "TableViewCell.h"
 #import "ViewSettingMatController.h"
@@ -19,6 +20,7 @@
     UITextField *txtName, *txtPrice, *txtCalorie;
     UIButton *btnNew, *btnEdit;
     NSMutableDictionary *dictCurrent;
+    NSArray *arrayPicker;
     NSMutableArray *arraySection, *arrayCurrent;
     float fHeight;
     BOOL bFloatStatus, bSelect;
@@ -42,7 +44,7 @@
             return;
         }
     }
-    sCurrentCategory = [App.arrDataMaterialCategory objectAtIndex:[pickerCategory selectedRowInComponent:0]];
+    sCurrentCategory = [arrayPicker objectAtIndex:[pickerCategory selectedRowInComponent:0]];
     [self addNewMaterial];
 }
 
@@ -62,7 +64,7 @@
             }
         }
         [self deleteMaterial];
-        sCurrentCategory = [App.arrDataMaterialCategory objectAtIndex:[pickerCategory selectedRowInComponent:0]];
+        sCurrentCategory = [arrayPicker objectAtIndex:[pickerCategory selectedRowInComponent:0]];
         sCurrentMaterial = s1;
         [self addNewMaterial];
         return;
@@ -75,7 +77,7 @@
         [dictCurrent setObject:cellArray forKey:sCurrentCategory];
     }
     
-    sCurrentCategory = [App.arrDataMaterialCategory objectAtIndex:[pickerCategory selectedRowInComponent:0]];
+    sCurrentCategory = [arrayPicker objectAtIndex:[pickerCategory selectedRowInComponent:0]];
     s2 = txtPrice.text;
     s3 = txtCalorie.text;
     
@@ -126,6 +128,7 @@
     NSMutableArray *cellArray = [dictCurrent objectForKey:sCurrentCategory];
     [cellArray removeRowWithKey_CC:sCurrentMaterial inColumn:0];
     [dictCurrent setObject:cellArray forKey:sCurrentCategory];
+    [self getNewSection];
     if (datafile == nil) {
         datafile = [MyData dataFilePath:@"material.s3db"];
     }
@@ -209,7 +212,7 @@
     return arrayCurrent.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (TableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellID = @"cell";
     TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
     if(cell == nil)
@@ -226,7 +229,7 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     sCurrentCategory = [arraySection objectAtIndex:indexPath.section];
-    sCurrentMaterial = [[dictCurrent objectForKey:sCurrentCategory] objectAtIndex:indexPath.row];
+    sCurrentMaterial = [[[dictCurrent objectForKey:sCurrentCategory] objectAtIndex:indexPath.row] objectAtIndex:0];
     //sCurrentMaterial = [(TableViewCell *)[tableView cellForRowAtIndexPath:indexPath]].lblTitle.text;
     [self deleteMaterial];
     /*
@@ -247,26 +250,24 @@
         datafile = [MyData dataFilePath:@"material.s3db"];
     }
     NSString *whereString = [NSString stringWithFormat:@"MaterialName = '%@'",cellSelect.lblTitle.text];
-    [MyData deleteRecordFromFile:datafile tableName:@"Material" where:whereString];
-    [tableCurrent reloadData];
-    [self clearAllInfo];*/
+    [MyData deleteRecordFromFile:datafile tableName:@"Material" where:whereString];*/
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"刪除";
 }
-
+/*
 - (NSArray *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSArray *a;
     return a;
-}
+}*/
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     bSelect = TRUE;
     [self btnEnable];
     sCurrentCategory = [arraySection objectAtIndex:indexPath.section];
-    for (int i = 0; i < App.arrDataMaterialCategory.count; i++) {
-        if ([sCurrentCategory isEqualToString:[App.arrDataMaterialCategory objectAtIndex:i]]) {
+    for (int i = 0; i < arrayPicker.count; i++) {
+        if ([sCurrentCategory isEqualToString:[arrayPicker objectAtIndex:i]]) {
             [pickerCategory selectRow:i inComponent:0 animated:YES];
         }
     }
@@ -281,17 +282,17 @@
 }
 
 -(NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return App.arrDataMaterialCategory.count;
+    return arrayPicker.count;
 }
 
 -(NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return [App.arrDataMaterialCategory objectAtIndex:row];
+    return [arrayPicker objectAtIndex:row];
 }
 
 -(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view {
     UILabel *label;
     label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, pickerCategory.frame.size.width, 20)];
-    label.text = [App.arrDataMaterialCategory objectAtIndex:row];
+    label.text = [arrayPicker objectAtIndex:row];
     label.textAlignment = NSTextAlignmentCenter;
     label.font = [UIFont fontWithName:@"Helvetica-Bold" size:16];
     return label;
@@ -302,6 +303,8 @@
     // Do any additional setup after loading the view.
     
     self.title = @"原料設定";
+    //NSArray *arrayTemp = [App.arrDataMaterialCategory sortWithNumber_CC:1];
+    arrayPicker = [[App.arrDataMaterialCategory sortWithNumber_CC:1] getSubArrayWithColumn_CC:0];
     dictCurrent = (NSMutableDictionary *)[MyData getDictionaryWithUniqueColumnValue:App.arrDataMaterial indexColumn:0];
     [self getNewSection];
     
@@ -344,18 +347,17 @@
     txtPrice.borderStyle = UITextBorderStyleBezel;
     txtPrice.keyboardType = UIKeyboardTypeDecimalPad;
     txtPrice.returnKeyType = UIReturnKeyNext;
-    txtPrice.placeholder = @"留空表示未知成本";
+    //txtPrice.placeholder = @"";
     [scrollView addSubview:txtPrice];
     
     txtCalorie = [[UITextField alloc] initWithFrame:CGRectMake(210, 105, SCREEN_WIDTH - 220, 30)];
     txtCalorie.borderStyle = UITextBorderStyleBezel;
     txtCalorie.keyboardType = UIKeyboardTypeDecimalPad;
     txtCalorie.returnKeyType = UIReturnKeyDone;
-    txtCalorie.placeholder = @"留空表示未知熱量";
+    //txtCalorie.placeholder = @"";
     [scrollView addSubview:txtCalorie];
     
     btnEdit = [[UIButton alloc]initWithFrame:CGRectMake(110, 150, SCREEN_WIDTH/2 - 70, 40)];
-    //btnDelete.backgroundColor = [UIColor colorWithRed:0.8 green:0 blue:0 alpha:1];
     btnEdit.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnEdit setTitle:@"修改" forState:UIControlStateNormal];
     btnEdit.enabled = false;
@@ -363,7 +365,6 @@
     [scrollView addSubview:btnEdit];
     
     btnNew= [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2 + 60, 150, SCREEN_WIDTH/2 - 70, 40)];
-    //btnEdit.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
     btnNew.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnNew setTitle:@"新增" forState:UIControlStateNormal];
     btnNew.enabled = false;
@@ -383,29 +384,10 @@
 
 - (void)getNewSection {
     //arraySection = (NSMutableArray *)[dictCurrent.allKeys sortedArrayUsingSelector:@selector(compare:)];
-    NSMutableArray *temp;
-    temp = [NSMutableArray arrayWithArray:dictCurrent.allKeys];
-    arraySection = (NSMutableArray *)[temp sortWithDictionaryArray_CC:App.arrDataMaterialCategory];
-    /*
-    arraySection = (NSMutableArray *)[temp sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        NSComparisonResult result;
-        NSInteger index1, index2;
-        index1 = index2 = App.arrDataMaterialCategory.count;
-        for (int i = 0; i < App.arrDataMaterialCategory.count; i++) {
-            if ([obj1 isEqual:[App.arrDataMaterialCategory objectAtIndex:i]]) {
-                index1 = i;
-                break;
-            }
-        }
-        for (int i = 0; i < App.arrDataMaterialCategory.count; i++) {
-            if ([obj2 isEqual:[App.arrDataMaterialCategory objectAtIndex:i]]) {
-                index2 = i;
-                break;
-            }
-        }
-        result = [[NSNumber numberWithInteger:index1] compare:[NSNumber numberWithInteger:index2]];//
-        return result;
-    }];*/
+    //NSMutableArray *temp;
+    //temp = [NSMutableArray arrayWithArray:dictCurrent.allKeys];
+    //arraySection = (NSMutableArray *)[temp sortWithDictionaryArray_CC:arrayPicker];
+    arraySection = [NSMutableArray arrayWithArray:[dictCurrent.allKeys sortWithDictionaryArray_CC:arrayPicker]];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

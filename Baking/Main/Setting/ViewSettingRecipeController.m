@@ -7,6 +7,8 @@
 //
 
 #import "MyArray.h"
+#import "MyMutableArray.h"
+#import "BakeRecipe.h"
 #import "MyData.h"
 #import "TableViewCell.h"
 #import "ViewSettingRecipeController.h"
@@ -16,17 +18,20 @@
     UIPickerView *pickerRecipe, *pickerMaterial;
     UIView *viewBlock;
     UIImageView *imgRecipe;
-    NSMutableArray *arrayC1, *arrayC2, *arrayC3, *arrayRecipe, *arrayM1, *arrayM2;
+    NSArray *arrayM1;
+    NSMutableArray *arrayC1, *arrayC2, *arrayC3, *arrayRecipe, *arrayM2;
     UITextField *txtNewRecipe, *txtEditRecipe, *txtMaterialAmount;
     EditType status;
     UIButton *btnNewCategory, *btnDeleteCategory, *btnEditCategory, *btnAddMaterial, *btnSubmit;
     UILabel *lblTitle, *lblMaterialName, *lblBakePercent;
     float fHeight;
     BOOL bFloatStatus;
-    NSString *datafile, *categoryName, *recipeName;
+    NSString *datafile;
+    //NSString *datafile, *categoryName, *recipeName;
     UITableView *tableCurrent;
     NSMutableDictionary *dictCurrent;
     TableViewCell *cellMaterial, *cellRecipe;
+    BakeRecipe *currentRecipe;
 }
 
 @end
@@ -40,6 +45,22 @@
     self.view.backgroundColor = [UIColor whiteColor];
     status = EditTypeNone;
     arrayRecipe = [NSMutableArray arrayWithObjects:nil];
+    arrayC1 = (NSMutableArray *)App.arrDataCategory;
+    arrayC2 = (NSMutableArray *)[App.arrDataCategory2 getRowsWithKey_CC:[arrayC1 objectAtIndex:0] inColumn:0];
+    if (arrayC2.count > 0) {
+        arrayC2 = (NSMutableArray *)[arrayC2 getSubArrayWithColumn_CC:1];
+        arrayC3 = (NSMutableArray *)[App.arrDataRecipe getRowsWithKey_CC:[arrayC2 objectAtIndex:0] inColumn:1];
+        if (arrayC3.count > 0){
+            arrayC3 = (NSMutableArray *)[arrayC3 getSubArrayWithColumn_CC:2];
+        }
+    }else{
+        arrayC3 = [NSMutableArray arrayWithObjects:nil];
+    }
+    [BakeRecipe setMaterialLib:[App.arrDataMaterial getSubArrayWithArray_CC:@[@"1",@"2",@"3"]]];
+    currentRecipe = [BakeRecipe new];
+    arrayM1 = [[App.arrDataMaterialCategory sortWithNumber_CC:1] getSubArrayWithColumn_CC:0];
+    arrayM2 = (NSMutableArray *)[App.arrDataMaterial getRowsWithKey_CC:[arrayM1 objectAtIndex:0] inColumn:0];
+    
     [self initControls];
 
     dictCurrent = (NSMutableDictionary *)[MyData getDictionaryWithUniqueColumnValue:App.arrDataMaterial indexColumn:0];
@@ -59,21 +80,6 @@
 }
 
 - (void)initControls {
-    arrayC1 = (NSMutableArray *)App.arrDataCategory;
-    arrayC2 = (NSMutableArray *)[App.arrDataCategory2 getRowsWithKey_CC:[arrayC1 objectAtIndex:0] inColumn:0];
-    if (arrayC2.count > 0) {
-        arrayC2 = (NSMutableArray *)[arrayC2 getSubArrayWithColumn_CC:1];
-        arrayC3 = (NSMutableArray *)[App.arrDataRecipe getRowsWithKey_CC:[arrayC2 objectAtIndex:0] inColumn:1];
-        if (arrayC3.count > 0){
-            arrayC3 = (NSMutableArray *)[arrayC3 getSubArrayWithColumn_CC:2];
-        }
-    }else{
-        arrayC3 = [NSMutableArray arrayWithObjects:nil];
-    }
-    
-    arrayM1 = (NSMutableArray *)App.arrDataMaterialCategory;
-    arrayM2 = (NSMutableArray *)[App.arrDataMaterial getRowsWithKey_CC:[arrayM1 objectAtIndex:0] inColumn:0];
-    
     lblTitle = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 40)];
     lblTitle.backgroundColor = [UIColor grayColor];
     lblTitle.font = [UIFont fontWithName:@"Helvetica" size:16];
@@ -94,16 +100,14 @@
     btnDeleteCategory.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnDeleteCategory setTitle:@"刪除配方" forState:UIControlStateNormal];
     btnDeleteCategory.enabled = FALSE;
-    [btnDeleteCategory addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    btnDeleteCategory.tag = 2;
+    [btnDeleteCategory addTarget:self action:@selector(btnClickedDelete) forControlEvents:UIControlEventTouchUpInside];
     [scrollCurrent addSubview:btnDeleteCategory];
     
     btnEditCategory = [[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2 + 10, 210, SCREEN_WIDTH/2-30, 40)];
     btnEditCategory.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnEditCategory setTitle:@"修改配方" forState:UIControlStateNormal];
     btnEditCategory.enabled = FALSE;
-    [btnEditCategory addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    btnEditCategory.tag = 3;
+    [btnEditCategory addTarget:self action:@selector(btnClickedModify) forControlEvents:UIControlEventTouchUpInside];
     [scrollCurrent addSubview:btnEditCategory];
     
     txtNewRecipe = [[UITextField alloc]initWithFrame:CGRectMake(20, 270, SCREEN_WIDTH-40, 40)];
@@ -119,8 +123,7 @@
     btnNewCategory = [[UIButton alloc]initWithFrame:CGRectMake(20, 330, SCREEN_WIDTH - 40, 40)];
     btnNewCategory.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
     [btnNewCategory setTitle:@"新增配方" forState:UIControlStateNormal];
-    [btnNewCategory addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
-    btnNewCategory.tag = 1;
+    [btnNewCategory addTarget:self action:@selector(btnClickedAddNew) forControlEvents:UIControlEventTouchUpInside];
     [scrollCurrent addSubview:btnNewCategory];
     
     imgRecipe = [[UIImageView alloc] initWithFrame:CGRectMake(10, 400, SCREEN_WIDTH -20, 0.618*SCREEN_WIDTH - 12)];
@@ -182,9 +185,8 @@
     btnAddMaterial = [[UIButton alloc]initWithFrame:CGRectMake(160, 80, SCREEN_WIDTH-180, 40)];
     btnAddMaterial.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnAddMaterial setTitle:@"增加材料" forState:UIControlStateNormal];
-    [btnAddMaterial addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [btnAddMaterial addTarget:self action:@selector(btnClickedAddMaterial) forControlEvents:UIControlEventTouchUpInside];
     btnAddMaterial.enabled = FALSE;
-    btnAddMaterial.tag = 5;
     [viewBlock addSubview:btnAddMaterial];
     
     pickerMaterial = [[UIPickerView alloc] initWithFrame:CGRectMake(0, 110, SCREEN_WIDTH, SCREEN_HEIGHT-200)];
@@ -204,7 +206,7 @@
     btnSubmit = [[UIButton alloc]initWithFrame:CGRectMake(20, 470, SCREEN_WIDTH-40, 40)];
     btnSubmit.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     [btnSubmit setTitle:@"提交" forState:UIControlStateNormal];
-    [btnSubmit addTarget:self action:@selector(btnClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [btnSubmit addTarget:self action:@selector(btnClickedSubmit) forControlEvents:UIControlEventTouchUpInside];
     btnSubmit.enabled = FALSE;
     btnSubmit.tag = 6;
     [viewBlock addSubview:btnSubmit];
@@ -389,83 +391,15 @@
     btnDeleteCategory.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
     btnDeleteCategory.enabled = FALSE;
 }
-
+/*
 - (void)btnClicked:(UIButton *)sender {
     NSString *s1, *whereString;
     NSMutableArray *arrayTemp;
     switch (sender.tag) {
-        case 1: //新增
-            if ([txtNewRecipe.text isEqualToString:@""]) {                
-                return;
-            }
-            s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
-            categoryName = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
-            recipeName = txtNewRecipe.text;
-            [arrayC3 addObject:recipeName];
-            
-            if (datafile == nil) {
-                datafile = [MyData dataFilePath:@"recipe.s3db"];
-            }
-            [MyData addRecordToFile:datafile tableName:@"Recipe" InsertString:[NSString stringWithFormat:@"(Category, RecipeName) VALUES ('%@', '%@')", categoryName, recipeName]];
-            App.arrDataRecipe = (NSMutableArray *)[MyData getArrayFormTableF:datafile tableName:@"Recipe"];
-            [pickerRecipe reloadComponent:2];
-            [pickerRecipe selectRow:arrayC3.count - 1 inComponent:2 animated:YES];
-            [self handlePickerRecipe];
-            txtNewRecipe.text = @"";
-            [self hideKeyboard];
-            arrayRecipe = [NSMutableArray arrayWithObjects:nil];
-            status = EditTypeAddNew;
-            self.title = @"配方設定（新增）";
-            if (arrayM2.count > 0) {
-                btnAddMaterial.enabled = TRUE;
-                btnAddMaterial.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
-            }
-            [btnSubmit setTitle:[NSString stringWithFormat:@"新增 %@ 配方",recipeName] forState:UIControlStateNormal];
-            btnSubmit.enabled = TRUE;
-            btnSubmit.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
-            [scrollCurrent setContentOffset:CGPointMake(0, viewBlock.frame.origin.y -110) animated:YES];
-            break;
-        case 2: //刪除
-            [arrayC3 removeObject:recipeName];
-            s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
-            categoryName = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
-            for (int i=0; i<App.arrDataRecipe.count; i++) {
-                arrayTemp = [App.arrDataRecipe objectAtIndex:i];
-                if ([[arrayTemp objectAtIndex:1]isEqualToString:categoryName] && [[arrayTemp objectAtIndex:2]isEqualToString:recipeName]) {
-                    [App.arrDataRecipe removeObjectAtIndex:i];
-                    break;
-                }
-            }
-            if (datafile == nil) {
-                datafile = [MyData dataFilePath:@"recipe.s3db"];
-            }
-            whereString = [NSString stringWithFormat:@"Category = '%@' AND RecipeName = '%@'", categoryName, recipeName];
-            [MyData deleteRecordFromFile:datafile tableName:@"Recipe" where:whereString];
-            [pickerRecipe reloadComponent:2];
-            status = EditTypeNone;
-            self.title = @"配方設定";
-            [self handlePickerRecipe];
-            break;
-        case 3: //修改
-            arrayRecipe = [NSMutableArray arrayWithObjects:nil];
-            s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
-            categoryName = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
-            arrayRecipe = (NSMutableArray *)[App.arrDataRecipeDetail getRowsWithKey_CC:recipeName inColumn:2];
-            [self resizeTable];
-            [tableCurrent reloadData];
-            status = EditTypeModify;
-            self.title = @"配方設定（修改）";
-            [self countTotalPercent];
-            if (arrayM2.count > 0) {
-                btnAddMaterial.enabled = TRUE;
-                btnAddMaterial.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
-            }
-            [btnSubmit setTitle:[NSString stringWithFormat:@"修改 %@ 配方",recipeName] forState:UIControlStateNormal];
-            btnSubmit.enabled = TRUE;
-            btnSubmit.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
-            [scrollCurrent setContentOffset:CGPointMake(0, viewBlock.frame.origin.y -110) animated:YES];
+          
             break;
         case 5: //增加材料
+            /*
             arrayTemp = @[@"",categoryName, recipeName,lblMaterialName.text ,txtMaterialAmount.text];
             [arrayRecipe addArray_CC:arrayTemp uniqueColumn:3];
             [self countTotalPercent];
@@ -474,65 +408,170 @@
             [self hideKeyboard];
             break;
         case 6: //提交新增或修改
-            [App.arrDataRecipeDetail appendArray_CC:arrayRecipe];
-            btnSubmit.enabled = FALSE;
-            btnSubmit.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
-            status = EditTypeNone;
-            [arrayRecipe removeAllObjects];
-            [tableCurrent reloadData];
-            [self resizeTable];
-            [scrollCurrent setContentOffset:CGPointMake(0, 0)];
+            
             //[self hideKeyboard];
             break;
         default:
             break;
     }
     //[self segSelected:segTitle];
+}*/
+
+- (void)btnClickedAddNew {
+    if ([txtNewRecipe.text isEqualToString:@""]) {
+        return;
+    }
+    //s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
+    //categoryName = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
+    //currentRecipe.category = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
+    //recipeName = txtNewRecipe.text;
+    currentRecipe = [BakeRecipe new];
+    [tableCurrent reloadData];
+    [self resizeTable];
+    currentRecipe.category = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
+    currentRecipe.name = txtNewRecipe.text;
+    [arrayC3 addObject:currentRecipe.name];
+    
+    if (datafile == nil) {
+        datafile = [MyData dataFilePath:@"recipe.s3db"];
+    }
+    [MyData addRecordToFile:datafile tableName:@"Recipe" InsertString:[NSString stringWithFormat:@"(Category, RecipeName) VALUES ('%@', '%@')", currentRecipe.category, currentRecipe.name]];
+    App.arrDataRecipe = (NSMutableArray *)[MyData getArrayFormTableF:datafile tableName:@"Recipe"];
+    [pickerRecipe reloadComponent:2];
+    [pickerRecipe selectRow:arrayC3.count - 1 inComponent:2 animated:YES];
+    [self handlePickerRecipe];
+    txtNewRecipe.text = @"";
+    [self hideKeyboard];
+    arrayRecipe = [NSMutableArray arrayWithObjects:nil];
+    status = EditTypeAddNew;
+    self.title = @"配方設定（新增）";
+    if (arrayM2.count > 0) {
+        btnAddMaterial.enabled = TRUE;
+        btnAddMaterial.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
+    }
+    [btnSubmit setTitle:[NSString stringWithFormat:@"新增 %@ 配方",currentRecipe.name] forState:UIControlStateNormal];
+    btnSubmit.enabled = TRUE;
+    btnSubmit.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
+    [scrollCurrent setContentOffset:CGPointMake(0, viewBlock.frame.origin.y -110) animated:YES];
 }
 
+- (void)btnClickedDelete {
+    NSMutableArray *arrayRow;
+    NSString *whereString;
+    [arrayC3 removeObject:currentRecipe.name];
+    for (int i = 0; i < App.arrDataRecipe.count; i++) {
+        arrayRow = [App.arrDataRecipe objectAtIndex:i];
+        if ([[arrayRow objectAtIndex:1]isEqualToString:currentRecipe.category] && [[arrayRow objectAtIndex:2]isEqualToString:currentRecipe.name]) {
+            [App.arrDataRecipe removeObjectAtIndex:i];
+            break;
+        }
+    }
+    if (datafile == nil) {
+        datafile = [MyData dataFilePath:@"recipe.s3db"];
+    }
+    whereString = [NSString stringWithFormat:@"Category = '%@' AND RecipeName = '%@'", currentRecipe.category, currentRecipe.name];
+    [MyData deleteRecordFromFile:datafile tableName:@"Recipe" where:whereString];
+    [pickerRecipe reloadComponent:2];
+    status = EditTypeNone;
+    self.title = @"配方設定";
+    [self handlePickerRecipe];
+}
+
+- (void)btnClickedModify {
+    //arrayRecipe = [NSMutableArray arrayWithObjects:nil];
+    //s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
+    //currentRecipe.category = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
+    //currentRecipe.name = [arrayC3 objectAtIndex:[pickerRecipe selectedRowInComponent:2]];
+    //arrayRecipe = (NSMutableArray *)[App.arrDataRecipeDetail getRowsWithKey_CC:recipeName inColumn:2];
+    NSArray *arrayTemp = [App.arrDataRecipeDetail getRowsWithKey_CC:currentRecipe.name inColumn:1];
+    currentRecipe.recipeMaterials =[NSMutableArray arrayWithArray:[arrayTemp getSubArrayWithArray_CC:@[@"2", @"3"]]];
+    [tableCurrent reloadData];
+    [self resizeTable];
+    status = EditTypeModify;
+    self.title = @"配方設定（修改）";
+    //[self countTotalPercent];
+    if (arrayM2.count > 0) {
+        btnAddMaterial.enabled = TRUE;
+        btnAddMaterial.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
+    }
+    [btnSubmit setTitle:[NSString stringWithFormat:@"修改 %@ 配方",currentRecipe.name] forState:UIControlStateNormal];
+    btnSubmit.enabled = TRUE;
+    btnSubmit.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:1];
+    [scrollCurrent setContentOffset:CGPointMake(0, viewBlock.frame.origin.y -110) animated:YES];
+}
+
+- (void)btnClickedAddMaterial {
+    [currentRecipe addMaterial:lblMaterialName.text Account:txtMaterialAmount.text.integerValue];
+    [tableCurrent reloadData];
+    //lblBakePercent.text = [NSString stringWithFormat:@"%.2f", [currentRecipe totalMaterialAccount]];
+    //[self countTotalPercent];
+    txtMaterialAmount.text = @"";
+    [self resizeTable];
+    [self hideKeyboard];
+}
+
+- (void)btnClickedSubmit {
+
+    btnSubmit.enabled = FALSE;
+    btnSubmit.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1];
+    status = EditTypeNone;
+    //[arrayRecipe removeAllObjects];
+    
+    if (datafile == nil) {
+        datafile = [MyData dataFilePath:@"recipe.s3db"];
+    }
+    for (int i=0; i<currentRecipe.recipeMaterials.count; i++) {
+        [MyData replaceRecordToFile:datafile tableName:@"RecipeContent" InsertString:[NSString stringWithFormat:@"(Category, RecipeName, MaterialName, Quantity) VALUES ('%@', '%@', '%@', '%@')", currentRecipe.category, currentRecipe.name,
+            [[currentRecipe.recipeMaterials objectAtIndex:i] objectAtIndex:0],
+            [[currentRecipe.recipeMaterials objectAtIndex:i] objectAtIndex:1]
+            ]];
+    }
+    App.arrDataRecipeDetail = (NSMutableArray *)[MyData getArrayFormTableF:datafile tableName:@"RecipeContent"];
+    //[pickerRecipe reloadComponent:2];
+    //[pickerRecipe selectRow:arrayC3.count - 1 inComponent:2 animated:YES];
+    //[self handlePickerRecipe];
+    //txtNewRecipe.text = @"";
+    //[self hideKeyboard];
+    
+    //currentRecipe = [BakeRecipe new];
+    currentRecipe.recipeMaterials = [NSMutableArray new];
+    [tableCurrent reloadData];
+    [self resizeTable];
+    [scrollCurrent setContentOffset:CGPointMake(0, 0)];
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-        return arrayRecipe.count;
+    //return arrayRecipe.count;
+    return currentRecipe.recipeMaterials.count;
 }
 
 - (TableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellID1 = @"cell1", *cellID2= @"cell2";
-    if (tableView.tag == 1) {
-        TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID1];/*
-        if(cell == nil)
-        {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TableViewCell" owner:self options:nil];
-            cell = [nib objectAtIndex:1];
-        }
-        arrayM1 = [dictCurrent objectForKey:[dictCurrent.allKeys objectAtIndex:indexPath.section]];
-        cell.lblTitle.text = [[arrayM1 objectAtIndex:indexPath.row ] objectAtIndex:0];
-        cell.lblPrice.text = [[arrayM1 objectAtIndex:indexPath.row ] objectAtIndex:1];
-        cell.lblCarolie.text = [[arrayM1 objectAtIndex:indexPath.row ] objectAtIndex:2];*/
-        return cell;
-    }else{
-        TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID2];
-        if(cell == nil)
-        {
-            NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TableViewCell" owner:self options:nil];
-            cell = [nib objectAtIndex:5];
-        }
-        cell.lblTitle.text = [[arrayRecipe objectAtIndex:indexPath.row ] objectAtIndex:3];
-        cell.lblAmount.text = [[arrayRecipe objectAtIndex:indexPath.row ] objectAtIndex:4];
-        //cell.lblPrice.text
-        //cell.lblCarolie.text = [[arrayMaterial objectAtIndex:indexPath.row ] objectAtIndex:2];
-        return cell;
+    static NSString *cellID = @"cell";
+    float account;
+    TableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+    if(cell == nil) {
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"TableViewCell" owner:self options:nil];
+        cell = [nib objectAtIndex:5];
     }
+    cell.lblTitle.text = [[currentRecipe.recipeMaterials objectAtIndex:indexPath.row] objectAtIndex:0];
+    account = [[[currentRecipe.recipeMaterials objectAtIndex:indexPath.row ] objectAtIndex:1] floatValue];
+    if (account < 2.0) {
+        cell.lblAmount.text =[NSString stringWithFormat:@"%.2f", account];
+    }else if (account < 20.0){
+        cell.lblAmount.text =[NSString stringWithFormat:@"%.1f", account];
+    }else{
+        cell.lblAmount.text =[NSString stringWithFormat:@"%.f", account];
+    }
+    return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (tableView.tag == 1) {
-        cellMaterial = (TableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-        lblMaterialName.text = cellMaterial.lblTitle.text;
-    }
+    cellMaterial = (TableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    lblMaterialName.text = cellMaterial.lblTitle.text;
 }
 
 - (void)resizeTable {
-    NSUInteger rows = arrayRecipe.count;
+    NSUInteger rows = currentRecipe.recipeMaterials.count;
     CGRect frame;
     if (rows > 0) {
         frame = tableCurrent.frame;
@@ -547,6 +586,7 @@
     frame.origin.y = tableCurrent.frame.origin.y + tableCurrent.frame.size.height;
     viewBlock.frame = frame;
     scrollCurrent.contentSize = CGSizeMake(SCREEN_WIDTH, frame.origin.y+frame.size.height);
+    lblBakePercent.text = [NSString stringWithFormat:@"%.2f", [currentRecipe totalMaterialAccount]];
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
@@ -582,30 +622,31 @@
             break;
     }
 }
-
+/*
 - (void)countTotalPercent {
+    /*
     float total = 0;
     [tableCurrent reloadData];
     for (int i=0; i<arrayRecipe.count; i++) {
         total += [[[arrayRecipe objectAtIndex:i] objectAtIndex:4] floatValue];
     }
     lblBakePercent.text = [NSString stringWithFormat:@"%.2f", total];
+    lblBakePercent.text = [NSString stringWithFormat:@"%.2f", [currentRecipe totalMaterialAccount]];
 }
-
+*/
 - (void)handlePickerRecipe {
     NSString *s1, *s2;
     s1 = [arrayC1 objectAtIndex:[pickerRecipe selectedRowInComponent:0]];
-    categoryName = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
+    currentRecipe.category = [arrayC2 objectAtIndex:[pickerRecipe selectedRowInComponent:1]];
     if (arrayC3.count > 0) {
-        recipeName = [arrayC3 objectAtIndex:[pickerRecipe selectedRowInComponent:2]];
-        lblTitle.text = [NSString stringWithFormat:@"%@-%@-%@",s1,categoryName,recipeName];
+        currentRecipe.name = [arrayC3 objectAtIndex:[pickerRecipe selectedRowInComponent:2]];
+        lblTitle.text = [NSString stringWithFormat:@"%@-%@-%@", s1, currentRecipe.category, currentRecipe.name];
         [self btnEnable];
     }else{
-        lblTitle.text = [NSString stringWithFormat:@"%@-%@",s1,categoryName];
+        lblTitle.text = [NSString stringWithFormat:@"%@-%@", s1, currentRecipe.category];
         [self btnDisable];
     }
     s1 = [arrayM1 objectAtIndex:[pickerMaterial selectedRowInComponent:0]];
-    //s2 = [arrayM2 objectAtIndex:[pickerMaterial selectedRowInComponent:1]];
     if (arrayM2.count > 0) {
         s2 = [[arrayM2 objectAtIndex:[pickerMaterial selectedRowInComponent:1]] objectAtIndex:1];
         lblMaterialName.text = s2;

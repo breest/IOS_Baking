@@ -13,6 +13,8 @@
 
 + (void)addRecordToFile:(NSString *)filename tableName:(NSString *)table InsertArray:(NSArray *)valueArray;
 + (void)addRecordToFile:(NSString *)filename tableName:(NSString *)table InsertString:(NSString *)valueString;
++ (void)replaceRecordToFile:(NSString *)filename tableName:(NSString *)table InsertArray:(NSArray *)valueArray;
++ (void)replaceRecordToFile:(NSString *)filename tableName:(NSString *)table InsertString:(NSString *)valueString;
 + (NSString *)dataFilePath:(NSString *)fileName;
 + (void)deleteRecordFromFile:(NSString *)filename tableName:(NSString *)table where:(NSString *)whereString;
 + (NSArray *)getArrayFormTableD:(sqlite3 *)database tableName:(NSString *)tableName;

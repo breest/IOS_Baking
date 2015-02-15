@@ -102,19 +102,19 @@
         [self.navigationController pushViewController:vc animated:NO];
     }else if (indexPath.section == 2&& indexPath.row == 0) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 4;
+        rootVC.mainViewController.selectedIndex = 5;
         [rootVC hideSlideViewController];
     }else if (indexPath.section == 2 && indexPath.row == 1) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 5;
+        rootVC.mainViewController.selectedIndex = 6;
         [rootVC hideSlideViewController];
     }else if (indexPath.section == 3 && indexPath.row == 0) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 6;
+        rootVC.mainViewController.selectedIndex = 7;
         [rootVC hideSlideViewController];
     }else if (indexPath.section == 3 && indexPath.row == 1) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 7;
+        rootVC.mainViewController.selectedIndex = 8;
         [rootVC hideSlideViewController];
     }else if (indexPath.section == 3 && indexPath.row == 2) {
         ViewLeftSystemController *vc = [[ViewLeftSystemController alloc] init];

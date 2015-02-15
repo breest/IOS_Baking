@@ -45,15 +45,15 @@
         [rootVC hideSlideViewController];
     }else if (indexPath.row == 1) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 9;
+        rootVC.mainViewController.selectedIndex = 10;
         [rootVC hideSlideViewController];
     }else if (indexPath.row == 2) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 10;
+        rootVC.mainViewController.selectedIndex = 11;
         [rootVC hideSlideViewController];
     }else if (indexPath.row == 3) {
         ViewRootController *rootVC = [ViewRootController sharedInstance];
-        rootVC.mainViewController.selectedIndex = 11;
+        rootVC.mainViewController.selectedIndex = 12;
         [rootVC hideSlideViewController];
     }
 

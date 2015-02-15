@@ -3,53 +3,7 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[ViewSettingRecipeController numberOfSectionsInTableView:]:ViewSettingRecipeController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "tableView.tag">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ViewSettingRecipeController pickerView:didSelectRow:inComponent:]:ViewSettingRecipeController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "App.arrDataMaterial">
-            </PersistentString>
-            <PersistentString
-               value = "[arrayC1 objectAtIndex:row]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ViewSettingRecipeController initControls]:ViewSettingRecipeController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "App.arrDataMaterial">
-            </PersistentString>
-            <PersistentString
-               value = "App.arrDataRecipe">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ViewSettingRecipeController pickerView:viewForRow:forComponent:reusingView:]:ViewSettingRecipeController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "label.text">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "-[ViewSettingRecipeController tableView:cellForRowAtIndexPath:]:ViewSettingRecipeController.m">
-         <PersistentStrings>
-            <PersistentString
-               value = "cell.lblTitle.text">
-            </PersistentString>
-            <PersistentString
-               value = "cell.lblAmount.text">
-            </PersistentString>
-         </PersistentStrings>
+         contextName = "-[ViewSettingRecipeController btnClickedAddMaterial]:ViewSettingRecipeController.m">
       </ContextState>
       <ContextState
          contextName = "-[ViewSettingMatController tableView:didSelectRowAtIndexPath:]:ViewSettingMatController.m">
@@ -71,13 +25,132 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ViewSettingRecipeController numberOfSectionsInTableView:]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "tableView.tag">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "-[ViewSettingMatController getNewSection]:ViewSettingMatController.m">
          <PersistentStrings>
             <PersistentString
-               value = "arraySection">
+               value = "App.arrDataMaterialCategory">
             </PersistentString>
             <PersistentString
-               value = "App.arrDataMaterialCategory">
+               value = "arraySection">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingMatController tableView:numberOfRowsInSection:]:ViewSettingMatController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "section">
+            </PersistentString>
+            <PersistentString
+               value = "arrayCurrent.count">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController initControls]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "App.arrDataMaterial">
+            </PersistentString>
+            <PersistentString
+               value = "App.arrDataRecipe">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController handlePickerRecipe]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "lblTitle.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController btnClickedModify]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "App.arrDataRecipeDetail">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController pickerView:viewForRow:forComponent:reusingView:]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "label.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[BakeRecipe removeMaterial:]:BakeRecipe.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[cell objectAtIndex:0]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController btnClickedSubmit]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "App.arrDataRecipeDetail">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingMatController tableView:commitEditingStyle:forRowAtIndexPath:]:ViewSettingMatController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "indexPath.row">
+            </PersistentString>
+            <PersistentString
+               value = "[[[dictCurrent objectForKey:sCurrentCategory] objectAtIndex:indexPath.row] objectAtIndex:0]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingMatController deleteMaterial]:ViewSettingMatController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "App.arrDataMaterial">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController tableView:cellForRowAtIndexPath:]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "cell.lblTitle.text">
+            </PersistentString>
+            <PersistentString
+               value = "cell.lblAmount.text">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingRecipeController pickerView:didSelectRow:inComponent:]:ViewSettingRecipeController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "App.arrDataMaterial">
+            </PersistentString>
+            <PersistentString
+               value = "[arrayC1 objectAtIndex:row]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ViewSettingMatController viewDidLoad]:ViewSettingMatController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "arraySection">
             </PersistentString>
          </PersistentStrings>
       </ContextState>

@@ -1,12 +1,13 @@
 //
-//  MyArray.m
+//  MyMutableArray.m
 //  Baking
 //
-//  Created by Chang Wei on 15/2/7.
+//  Created by Chang Wei on 15/2/13.
 //  Copyright (c) 2015年 Chang Wei. All rights reserved.
 //
 
 #import "MyArray.h"
+#import "MyMutableArray.h"
 
 @implementation NSMutableArray(ArrayBoost)
 
@@ -14,10 +15,10 @@
     if ([self containsObject:anObject]) {
         UIAlertView *alert;
         alert = [[UIAlertView alloc] initWithTitle:@"警告"
-                                    message:@"對象已存在，重複添加！"
-                                    delegate:nil
-                                    cancelButtonTitle:@"確定"
-                                    otherButtonTitles:nil];
+                                           message:@"對象已存在，重複添加！"
+                                          delegate:nil
+                                 cancelButtonTitle:@"確定"
+                                 otherButtonTitles:nil];
         [alert show];
     }else{
         [self addObject:anObject];
@@ -33,13 +34,7 @@
     [self addObject:newArray];
     return TRUE;
 }
-
-- (void)appendArray_CC:(NSArray *)newArray {
-    for (int i = 0; i < newArray.count; i++) {
-        [self addObject:[newArray objectAtIndex:i]];
-    }
-}
-
+/*
 - (BOOL)allObjectsIsArray_CC {
     id object;
     for (int i = 0; i < self.count; i++) {
@@ -49,74 +44,40 @@
         }
     }
     return TRUE;
-}
+}*/
 
+- (void)appendArray_CC:(NSArray *)newArray {
+    for (int i = 0; i < newArray.count; i++) {
+        [self addObject:[newArray objectAtIndex:i]];
+    }
+}
+- (NSArray *)arrayAddColumn_CC:(NSUInteger)indexColumn defaultValue:(id)defaultObject {
+    NSMutableArray *arrayOldRow, *arrayNewRow, *returnArray;
+    if (indexColumn > [self columns_CC]) {
+        indexColumn = [self columns_CC];
+    }
+    returnArray = [NSMutableArray new];
+    for (int i = 0; i < self.count; i++) {
+        arrayOldRow = [self objectAtIndex:i];
+        arrayNewRow = [NSMutableArray new];
+        for (int j = 0; j < arrayOldRow.count; j++) {
+            if (j == indexColumn) {
+                [arrayNewRow addObject:defaultObject];
+            }
+            [arrayNewRow addObject:[arrayOldRow objectAtIndex:j]];
+        }
+        [returnArray addObject:arrayNewRow];
+    }
+    return returnArray;
+}
+/*
 - (NSInteger)columns_CC {
     if (self.count > 0 && [self allObjectsIsArray_CC]) {
         return ((NSArray *)[self objectAtIndex:0]).count;
     }
     return -1;
-}
+}*/
 /*
-- (NSArray *)getArrayWithIndex:(NSArray *)array indexObject:(id)index indexColumn:(int)col {
-    NSMutableArray *arrayRow, *arrayCell, *arrayTable = [NSMutableArray new];
-    for (int i=0; i<array.count; i++) {
-        arrayRow = [array objectAtIndex:i];
-        if (col >= arrayRow.count) {
-            col = 0;
-        }
-        if ([[arrayRow objectAtIndex:col] isEqual:index]) {
-            NSMutableArray *arrayTemp = [NSMutableArray new];
-            for (int j=0; j<arrayRow.count; j++) {
-                if (j==col) {
-                    continue;
-                }
-                if (arrayRow.count == 2) {
-                    arrayCell = [NSMutableArray arrayWithObjects:index, [arrayRow objectAtIndex:j], nil];
-                }else{
-                    [arrayTemp addObject:[arrayRow objectAtIndex:j]];
-                }
-            }
-            if (arrayRow.count > 2) {
-                arrayCell = [NSMutableArray arrayWithObjects:index, arrayTemp, nil];
-            }
-            [arrayTable addObject:arrayCell];
-        }
-    }
-    return arrayTable;
-}
-
-- (NSDictionary *)getDictionaryIncludeArray:(NSArray *)array includeArray:(NSArray *)includeArray indexColumn:(int)col {
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    //= [NSMutableArray arrayWithObjects:nil];
-    NSArray *arrayTemp;
-    NSMutableArray *arrayTemp2;
-    for (int i = 0; i < includeArray.count; i++) {
-        arrayTemp = [self getArrayWithIndex:array indexObject:[includeArray objectAtIndex:i] indexColumn:col];
-        arrayTemp2 = [NSMutableArray arrayWithObjects:nil];
-        for (int j=0; j<arrayTemp.count; j++) {
-            [arrayTemp2 addObject:[[arrayTemp objectAtIndex:j] objectAtIndex:1]];
-        }
-        [dict setObject:arrayTemp2 forKey:[includeArray objectAtIndex:i]];
-    }
-    return dict;
-}
-
-- (NSDictionary *)getDictionaryWithUniqueColumnValue:(NSArray *)array indexColumn:(int)col {
-    NSDictionary *dict;
-    NSMutableArray *arrayKey = [NSMutableArray arrayWithObjects:nil];
-    id currentIndex;
-    
-    for (int i=0; i<array.count; i++) {
-        currentIndex = [[array objectAtIndex:i] objectAtIndex:col];
-        if (![self objectInArray:arrayKey object:currentIndex]) {
-            [arrayKey addObject:currentIndex];
-        }
-    }
-    dict = [self getDictionaryIncludeArray:array includeArray:arrayKey indexColumn:col];
-    return dict;
-}
-*/
 - (NSArray *)getSubArrayWithColumn_CC:(NSInteger)index {
     //從二維數組某列得到新數組
     NSMutableArray *returnArray;
@@ -154,7 +115,7 @@
         }
     }
     return (NSArray *)returnArray;
-}
+}*/
 
 - (void)removeRowWithKey_CC:(id)Object inColumn:(NSInteger)index {
     //通過指定列關鍵詞刪除一行
@@ -167,7 +128,7 @@
         }
     }
 }
-
+/*
 - (NSArray *)sortWithDictionaryArray_CC:(NSArray *)dictionaryArray {
     NSArray *returnArray;
     returnArray = [self sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -190,21 +151,10 @@
         return result;
     }];
     return returnArray;
-}
-/*
-//自定义排序方法
--(NSComparisonResult)compareArray:(id)object dictionaryArray:(NSArray *)dictionaryArray{
-    //默认按年龄排序
-    NSComparisonResult result = [[NSNumber numberWithInt:person.age] compare:[NSNumber numberWithInt:self.age]];//注意:基本数据类型要进行数据转换
-    //如果年龄一样，就按照名字排序
-    if (result == NSOrderedSame) {
-        result = [self.name compare:person.name];
-    }
-    return result;
-}
-*/
--(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+}*/
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
 }
 
 @end

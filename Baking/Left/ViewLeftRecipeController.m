@@ -7,10 +7,12 @@
 //
 
 #import "MyData.h"
+#import "ViewRootController.h"
 #import "ViewLeftRecipeController.h"
 
 @interface ViewLeftRecipeController (){
     NSMutableArray *arrayRecipe;
+    TableViewCell *tableCell;
 }
 
 @end
@@ -29,13 +31,28 @@
         cell = [nib objectAtIndex:0];
     }
     //arrayCell = [[arrayRoot objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cell.imgTitle.image = [UIImage imageNamed:@"06"];
+    cell.imgTitle.image = [UIImage imageNamed:@"02"];
     cell.lblTitle.text = [arrayRecipe objectAtIndex:indexPath.row];
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+    tableCell = (TableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    App.recipeCategory = tableCell.lblTitle.text;
+    //[[arrayRoot objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    if (indexPath.section == 0) {
+        ViewRootController *rootVC = [ViewRootController sharedInstance];
+        rootVC.mainViewController.selectedIndex = 4;
+        [rootVC hideSlideViewController];
+    }else if (indexPath.section == 0&& indexPath.row == 1) {
+        ViewRootController *rootVC = [ViewRootController sharedInstance];
+        rootVC.mainViewController.selectedIndex = 1;
+        [rootVC hideSlideViewController];
+    }else if (indexPath.section == 0 && indexPath.row == 2) {
+        ViewRootController *rootVC = [ViewRootController sharedInstance];
+        rootVC.mainViewController.selectedIndex = 2;
+        [rootVC hideSlideViewController];
+    }
 }
 
 - (void)viewDidLoad {

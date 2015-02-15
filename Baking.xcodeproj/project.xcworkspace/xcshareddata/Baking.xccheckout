@@ -10,14 +10,14 @@
 	<string>Baking</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>2C8E6666F4A5325BAA93A28BD3715CEAD345A55D</key>
+		<key>5D2ED28ADD6EA700EA64FDC7AE4100F31F7AB652</key>
 		<string>https://github.com/breest/IOS_baking.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Baking.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>2C8E6666F4A5325BAA93A28BD3715CEAD345A55D</key>
+		<key>5D2ED28ADD6EA700EA64FDC7AE4100F31F7AB652</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>2C8E6666F4A5325BAA93A28BD3715CEAD345A55D</string>
+	<string>5D2ED28ADD6EA700EA64FDC7AE4100F31F7AB652</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>2C8E6666F4A5325BAA93A28BD3715CEAD345A55D</string>
+			<string>5D2ED28ADD6EA700EA64FDC7AE4100F31F7AB652</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Baking</string>
 		</dict>

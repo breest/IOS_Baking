@@ -1,29 +1,23 @@
 //
-//  ViewUserFavoriteController.m
+//  ViewRecipeController.m
 //  Baking
 //
-//  Created by Chang Wei on 15/2/4.
+//  Created by Chang Wei on 15/2/14.
 //  Copyright (c) 2015年 Chang Wei. All rights reserved.
 //
 
-#import "MyArray.h"
-#import "ViewUserFavoriteController.h"
+#import "ViewRecipeController.h"
 
-@interface ViewUserFavoriteController ()
+@interface ViewRecipeController ()
 
 @end
 
-@implementation ViewUserFavoriteController
+@implementation ViewRecipeController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.title = @"我的最愛";
-    self.view.backgroundColor = [UIColor redColor];
-    NSMutableArray *arr;
-    arr = [NSMutableArray new];
-    NSInteger b;
-    arr = [App.arrDataRecipeDetail getSubArrayWithArray_CC:@[@2,@3]];
+    self.title = App.recipeCategory;
 }
 
 - (void)didReceiveMemoryWarning {

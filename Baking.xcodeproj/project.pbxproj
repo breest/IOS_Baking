@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B60DBCD81A8E33140034C2A8 /* MyMutableArray.m in Sources */ = {isa = PBXBuildFile; fileRef = B60DBCD71A8E33140034C2A8 /* MyMutableArray.m */; };
+		B6424DFB1A8F90270076AB7F /* ViewRecipeController.m in Sources */ = {isa = PBXBuildFile; fileRef = B6424DFA1A8F90270076AB7F /* ViewRecipeController.m */; };
+		B644A9161A8F1585008662B7 /* BakeRecipe.m in Sources */ = {isa = PBXBuildFile; fileRef = B644A9151A8F1585008662B7 /* BakeRecipe.m */; };
+		B644A9191A8F17AE008662B7 /* BakeMaterial.m in Sources */ = {isa = PBXBuildFile; fileRef = B644A9181A8F17AE008662B7 /* BakeMaterial.m */; };
 		B646AA1E1A7CD9670042BA48 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B646AA151A7CD9670042BA48 /* AppDelegate.m */; };
 		B646AA221A7CD9670042BA48 /* ViewRootController.m in Sources */ = {isa = PBXBuildFile; fileRef = B646AA1D1A7CD9670042BA48 /* ViewRootController.m */; };
 		B646AA751A7CD9F90042BA48 /* bk.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B646AA281A7CD9F90042BA48 /* bk.jpg */; };
@@ -179,6 +183,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		B60DBCD61A8E33140034C2A8 /* MyMutableArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyMutableArray.h; sourceTree = "<group>"; };
+		B60DBCD71A8E33140034C2A8 /* MyMutableArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyMutableArray.m; sourceTree = "<group>"; };
+		B6424DF91A8F90270076AB7F /* ViewRecipeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewRecipeController.h; sourceTree = "<group>"; };
+		B6424DFA1A8F90270076AB7F /* ViewRecipeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewRecipeController.m; sourceTree = "<group>"; };
+		B644A9141A8F1585008662B7 /* BakeRecipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BakeRecipe.h; sourceTree = "<group>"; };
+		B644A9151A8F1585008662B7 /* BakeRecipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BakeRecipe.m; sourceTree = "<group>"; };
+		B644A9171A8F17AE008662B7 /* BakeMaterial.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BakeMaterial.h; sourceTree = "<group>"; };
+		B644A9181A8F17AE008662B7 /* BakeMaterial.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BakeMaterial.m; sourceTree = "<group>"; };
 		B646AA141A7CD9670042BA48 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B646AA151A7CD9670042BA48 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		B646AA1C1A7CD9670042BA48 /* ViewRootController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewRootController.h; sourceTree = "<group>"; };
@@ -397,6 +409,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B6424DF81A8F8FDC0076AB7F /* Recipe */ = {
+			isa = PBXGroup;
+			children = (
+				B6424DF91A8F90270076AB7F /* ViewRecipeController.h */,
+				B6424DFA1A8F90270076AB7F /* ViewRecipeController.m */,
+			);
+			path = Recipe;
+			sourceTree = "<group>";
+		};
+		B644A9131A8F1530008662B7 /* BaseType */ = {
+			isa = PBXGroup;
+			children = (
+				B644A9141A8F1585008662B7 /* BakeRecipe.h */,
+				B644A9151A8F1585008662B7 /* BakeRecipe.m */,
+				B644A9171A8F17AE008662B7 /* BakeMaterial.h */,
+				B644A9181A8F17AE008662B7 /* BakeMaterial.m */,
+			);
+			path = BaseType;
+			sourceTree = "<group>";
+		};
 		B646AA131A7CD9670042BA48 /* Root */ = {
 			isa = PBXGroup;
 			children = (
@@ -558,6 +590,7 @@
 		B646AB4F1A7CE4C80042BA48 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				B6424DF81A8F8FDC0076AB7F /* Recipe */,
 				B6D7BBC61A8438B100226BA0 /* Share */,
 				B6D7BBB91A84388500226BA0 /* User */,
 				B6D7BBA91A84381400226BA0 /* Root */,
@@ -577,6 +610,8 @@
 				B6CEA1981A87515C00BF400D /* MyData.m */,
 				B6E83D251A8874A500762373 /* MyDictionary.h */,
 				B6E83D261A8874A500762373 /* MyDictionary.m */,
+				B60DBCD61A8E33140034C2A8 /* MyMutableArray.h */,
+				B60DBCD71A8E33140034C2A8 /* MyMutableArray.m */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -680,6 +715,7 @@
 		B6E165391A7177DC00AA9B3A /* Baking */ = {
 			isa = PBXGroup;
 			children = (
+				B644A9131A8F1530008662B7 /* BaseType */,
 				B68E653E1A863410008F4B80 /* Library */,
 				B6D5276D1A80CC7500DD26CF /* Right */,
 				B646AB4F1A7CE4C80042BA48 /* Main */,
@@ -954,6 +990,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B6424DFB1A8F90270076AB7F /* ViewRecipeController.m in Sources */,
 				B6D5276C1A80C96700DD26CF /* ViewSettingRecipeController.m in Sources */,
 				B6D7BBC21A84388500226BA0 /* ViewUserFavoriteController.m in Sources */,
 				B6D5494C1A7E98C9005C1E70 /* ViewSettingMatController.m in Sources */,
@@ -970,15 +1007,18 @@
 				B646AB7D1A7CE9F90042BA48 /* ViewLeftRootController.m in Sources */,
 				B646AA221A7CD9670042BA48 /* ViewRootController.m in Sources */,
 				B6D7BBB61A84381400226BA0 /* TabMainController.m in Sources */,
+				B60DBCD81A8E33140034C2A8 /* MyMutableArray.m in Sources */,
 				B646AA1E1A7CD9670042BA48 /* AppDelegate.m in Sources */,
 				B6D7BBB41A84381400226BA0 /* NaviMainStartController.m in Sources */,
 				B6D527701A80CCBF00DD26CF /* NaviRightController.m in Sources */,
+				B644A9191A8F17AE008662B7 /* BakeMaterial.m in Sources */,
 				B6D527A11A81661100DD26CF /* ViewSettingCustomController.m in Sources */,
 				B646AB771A7CE6FB0042BA48 /* NaviLeftController.m in Sources */,
 				B6D7E24C1A78ED0B00C5FC11 /* TableViewCell.m in Sources */,
 				B646AB831A7D2BA50042BA48 /* ViewLeftRecipeController.m in Sources */,
 				B6D7BBCB1A8438B100226BA0 /* ViewShareFBController.m in Sources */,
 				B6E1653D1A7177DC00AA9B3A /* main.m in Sources */,
+				B644A9161A8F1585008662B7 /* BakeRecipe.m in Sources */,
 				B6D804421A7D545400B8A212 /* ViewSettingUIController.m in Sources */,
 				B646AB7A1A7CE7DC0042BA48 /* VC_Left_Super.m in Sources */,
 				B6D7BBB51A84381400226BA0 /* NaviSuperMainController.m in Sources */,

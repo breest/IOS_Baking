@@ -259,6 +259,47 @@
     return bInArray;
 }
 
++ (void)replaceRecord:(sqlite3 *)database tableName:(NSString *)table InsertArray:(NSArray *)valueArray{
+    NSString *valueString;
+    
+    valueString = [NSString stringWithFormat:@"VALUES ('%@'", [valueArray objectAtIndex:0]];
+    for (int i=1; i<valueArray.count; i++) {
+        valueString = [NSString stringWithFormat:@"%@ , '%@'", valueString, [valueArray objectAtIndex:i]];
+    }
+    valueString = [NSString stringWithFormat:@"%@)", valueString];
+    [self replaceRecord:database tableName:table InsertString:valueString];
+}
+
++ (void)replaceRecord:(sqlite3 *)database tableName:(NSString *)table InsertString:(NSString *)valueString{
+    NSString *sqlString;
+    
+    //sqlString = [[NSString alloc] initWithFormat:@"INSERT INTO %@ VALUES(%@) WHERE %@", table, valueString, condition];
+    sqlString = [[NSString alloc] initWithFormat:@"REPLACE INTO %@ %@", table, valueString];
+    [self sqlexec:database sqlString:sqlString];
+}
+
++ (void)replaceRecordToFile:(NSString *)filename tableName:(NSString *)table InsertArray:(NSArray *)valueArray{
+    sqlite3 *database;
+    
+    if (sqlite3_open([filename UTF8String], &database) != SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Failed to open database");
+    }
+    [self replaceRecord:database tableName:table InsertArray:valueArray];
+    sqlite3_close(database);
+}
+
++ (void)replaceRecordToFile:(NSString *)filename tableName:(NSString *)table InsertString:(NSString *)valueString{
+    sqlite3 *database;
+    
+    if (sqlite3_open([filename UTF8String], &database) != SQLITE_OK) {
+        sqlite3_close(database);
+        NSAssert(0, @"Failed to open database");
+    }
+    [self replaceRecord:database tableName:table InsertString:valueString];
+    sqlite3_close(database);
+}
+
 + (void)sqlexec:(sqlite3 *)database sqlString:(NSString *)sqlString{
     char *errorMsg;
     

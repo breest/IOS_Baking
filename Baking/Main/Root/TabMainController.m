@@ -10,6 +10,7 @@
 #import "ViewUserRecentController.h"
 #import "ViewUserLocalController.h"
 #import "ViewUserUnitController.h"
+#import "ViewRecipeController.h"
 #import "ViewShareFBController.h"
 #import "ViewShareLineController.h"
 #import "ViewSettingRecipeController.h"
@@ -44,6 +45,8 @@
         NaviSuperMainController *nvc02 = [[NaviSuperMainController alloc] initWithRootViewController:vc02];
         ViewUserUnitController *vc03 = [[ViewUserUnitController alloc] init];
         NaviSuperMainController *nvc03 = [[NaviSuperMainController alloc] initWithRootViewController:vc03];
+        ViewRecipeController *vc1 = [[ViewRecipeController alloc] init];
+        NaviSuperMainController *nvc1 = [[NaviSuperMainController alloc] initWithRootViewController:vc1];
         ViewShareFBController *vc20 = [[ViewShareFBController alloc] init];
         NaviSuperMainController *nvc20 = [[NaviSuperMainController alloc] initWithRootViewController:vc20];
         ViewShareLineController *vc21 = [[ViewShareLineController alloc] init];
@@ -60,10 +63,10 @@
         NaviSuperMainController *nvc322 = [[NaviSuperMainController alloc] initWithRootViewController:vc322];
         ViewSettingUserController *vc323 = [[ViewSettingUserController alloc] init];
         NaviSuperMainController *nvc323 = [[NaviSuperMainController alloc] initWithRootViewController:vc323];
-        NSArray *controllers = @[nvc00,nvc01,nvc02,nvc03,nvc20,nvc21,nvc30,nvc31,nvc320,nvc321,nvc322,nvc323];
-        NSArray *titles = @[@"vc1",@"vc2",@"vc3",@"nvc1",@"24",@"24",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
-        NSArray *images = @[@"21",@"22",@"23",@"24",@"24",@"24",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
-        NSArray *selectedImages = @[@"11",@"12",@"13",@"14",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
+        NSArray *controllers = @[nvc00,nvc01,nvc02,nvc03,nvc1,nvc20,nvc21,nvc30,nvc31,nvc320,nvc321,nvc322,nvc323];
+        NSArray *titles = @[@"vc1",@"vc2",@"vc3",@"nvc1",@"nvc1",@"24",@"24",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
+        NSArray *images = @[@"21",@"22",@"23",@"24",@"nvc1",@"24",@"24",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
+        NSArray *selectedImages = @[@"11",@"12",@"13",@"14",@"nvc1",@"24",@"vc3",@"nvc1",@"24",@"24",@"24"];
         return [self initWithChildViewControllers:controllers tabTitles:titles tabImages:images selectedImages:selectedImages backgroundImage:@"bk" selectionIndicatorImage:@"tab_bg_pressed"];
     }
     return self;

@@ -19,6 +19,7 @@
 @property NSMutableDictionary *dictL_02;
 @property NSMutableDictionary *dictMaterial;
 @property NSMutableArray *arrayRecipe, *arrayRecipeCatalog;
+@property NSString *recipeCategory;
 
 @end
 
